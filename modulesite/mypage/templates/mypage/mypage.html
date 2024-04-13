@@ -8,6 +8,7 @@
         /* 밑줄 스타일 */
         .underline {
             border-bottom: 1px solid black;
+            margin-bottom: 20px; /* 여백 추가 */
         }
 
         /* 가운데 정렬 */
@@ -49,8 +50,19 @@
 
         /* 삭제 버튼 스타일 */
         .delete-button {
-            display: block; /* 블록 요소로 설정하여 줄 바꿈 추가 */
-            margin: 20px auto; /* 가운데 정렬 */
+            margin: 10px auto; /* 가운데 정렬 */
+            display: block; /* 블록 요소로 설정하여 가로 정렬 */
+            padding: 10px 20px; /* 삭제 버튼 내부 여백 설정 */
+            background-color: #f44336; /* 배경색 설정 */
+            color: white; /* 텍스트 색상 설정 */
+            border: none; /* 테두리 제거 */
+            border-radius: 5px; /* 테두리 모서리 둥글게 만들기 */
+            cursor: pointer; /* 포인터로 마우스 커서 변경 */
+        }
+        
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            margin-bottom: 20px; /* 여백 추가 */
         }
     </style>
 </head>
@@ -58,17 +70,17 @@
     <!-- 상단 문구 -->
     <div class="center">
         <h1>맛집 커뮤니티</h1>
-        <span id="online-users" class="right">접속자: whoami</span>
+        <span id="online-users" class="right">접속자: {{ user_id }}</span>
     </div>
 
     <!-- 밑줄 -->
     <div class="underline"></div>
 
     <!-- 버튼들 -->
-    <div class="center">
-        <a href="{% url 'main_page' %}" class="button">뒤로가기</a>
-        <button class="button">회원정보 수정</button>
-        <a href="{% url 'main_page' %}" class="button">로그아웃</a>
+    <div class="center button-container">
+        <a href="{% url 'edit_password' user_id=user_id %}" class="button">비밀번호 변경</a>
+        <a href="{% url 'remove_user' user_id=user_id %}" class="button">회원 탈퇴</a>
+        <a href="{% url 'logout' %}" class="button">로그아웃</a>
     </div>
 
     <form action="{% url 'delete_post' %}" method="post">
@@ -89,8 +101,8 @@
                 {% for post in posts %}
                 <tr>
                     <td><input type="checkbox" name="post_ids" value="{{ post.id }}"></td>
-                    <td>{{ post.subject }}</td>
-                    <td>{{ post.type }}</td>
+                    <td><a href="{% url 'post_detail' post.id %}">{{ post.subject }}</a></td>
+                    <td>{{ post.tag }}</td>
                     <td>{{ post.view_count }}</td>
                     <td>{{ post.post_create_time }}</td>
                 </tr>
