@@ -15,7 +15,7 @@ class Post(models.Model):
     image1 = models.ImageField(upload_to='uploads/', blank=True, null=True)
     image2 = models.ImageField(upload_to='uploads/', blank=True, null=True)
     image3 = models.ImageField(upload_to='uploads/', blank=True, null=True)
-
+    
     def __str__(self):
         return self.title
 

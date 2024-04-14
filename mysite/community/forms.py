@@ -4,7 +4,7 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'image1', 'image2', 'image3']
+        fields = ['title', 'content', 'image1' ,'image2' ,'image3']
 
 
 class SearchForm(forms.Form):

@@ -10,6 +10,7 @@ from .models import Post
 
 
 
+
 def index(request):
    
     return render(request, 'community/main.html')
@@ -22,11 +23,11 @@ def my_page(request):
     return render(request,'community/my_page.html')
 
 def main(request):
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-pk')
     return render(request, 'community/main.html',{'posts': posts,})
 
 def loginok_page(request):
-     posts = Post.objects.all()
+     posts = Post.objects.all().all().order_by('-pk')
      return render(request, 'community/loginok.html',{'posts': posts,})
 
 
@@ -53,4 +54,7 @@ def create_post(request):
         form = PostForm()
     return render(request, 'community/create_post.html', {'form': form})
 
+
+def post_detail(request):
+    return render(request, "post_detail.html")
 
