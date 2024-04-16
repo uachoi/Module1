@@ -1,0 +1,13 @@
+<!-- 로그인 성공 시 나타나는 페이지 확인용-->
+{% extends 'base.html' %}
+{% block content %}
+{% if post_list %}
+    <ul>
+    {% for post in post_list %}
+        <li><a href="{% url 'index' %}">{{ post.subject }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>-- 로그인 성공 --</p>
+{% endif %}
+{% endblock %}
