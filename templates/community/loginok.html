@@ -67,7 +67,7 @@ figcaption {
         <a href="{% url 'loginok' %}"> <!--main_page => loginok  // 홈을 눌렀을 때 메인페이지(로그인한 사용자)로-->
             <button class="btn btn-outline-success" type="button">Home</button>
         </a>
-        <a href="{% url 'main_page' %}">   <!--logout => main_page // 로그아웃 버튼을 눌렀을 때 비회원 메인페이지로 전환-->
+        <a href="{% url 'main_page' %}">  <!--logout => main_page // 로그아웃 버튼을 눌렀을 때 비회원 메인페이지로 전환-->
             <button class="btn btn-outline-danger" type="button">Logout</button>
         </a>
         <a href="{% url 'mypage:mypage' %}">
@@ -78,8 +78,10 @@ figcaption {
     <div class="underline"></div>
 
     <div class="center">
-        <h1>맛집 커뮤니티</h1>
-        <span id="online-users" class="right">접속자: {{ author }}</span>
+        <h1>🍴맛집 커뮤니티✨</h1>
+        {% if user.is_authenticated %}
+            <span id="online-users" class="right">현재 접속 ID: {{ user.username }}</span>
+        {% endif %}
     </div>
 
 
@@ -98,7 +100,7 @@ figcaption {
 
     <hr/>
 
-    <h1>게시물 목록</h1>
+    <h1>📃 게시물 목록</h1>
     <ul>
         <!-- posts 데이터를 반복하며 게시물을 표시합니다 // post->posing -->
         {% for posting in postings %}
@@ -109,9 +111,8 @@ figcaption {
                 <h3>{{ posting.title }}</h3>
                 
                 <p>작성자: {{ posting.author}}</p>
-                
                 <p>작성 시간: {{ posting.created_at }}</p>
-                <p>좋아요 수: {{ posting.likes }}</p> 
+                <p>좋아요 수: {{ posting.likes.count }}</p> <!--posting.likes-->
                 <p>조회수: {{ posting.views }}</p> 
                 
             </li>

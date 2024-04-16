@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="post-container">
-        <h1 class="community-title">맛집 커뮤니티✨</h1>
+        <h1 class="community-title">🍴맛집 커뮤니티✨</h1>
         <article>
             <h2 class="post-title">{{ posting.title }}</h2>
             <div class="post-content">
@@ -136,7 +136,7 @@
         </article>
 
         <!-- 메인 화면으로 가는 링크 -->
-        <a href="{% url 'loginok' %}" class="main-page-link">메인 화면</a>
+        <a href="{% url 'main_page' %}" class="main-page-link">메인 화면</a>
 
         <!-- 댓글 섹션 -->
         <section class="comments-section">
@@ -150,7 +150,7 @@
                 <p>댓글이 없습니다.</p>
             {% endfor %}
             <!-- 댓글 입력 폼 -->
-            {% if user.is_authenticated %}
+            {% comment %} {% if user.is_authenticated %}
                 <form action="{% url 'add_comment' post.pk %}" method="post">      <!--posting.id에서 변경-->
                     {% csrf_token %}
                     <textarea name="comment" placeholder="댓글을 남겨주세요"></textarea>
@@ -158,7 +158,13 @@
                 </form>
             {% else %}
                 <p><a href="{% url 'page1:login' %}?next={{ request.path }}">로그인 후 댓글 남기기</a></p>
-            {% endif %}
+            {% endif %} {% endcomment %}
+            <!-- {% if not user.is_authenticated %} -->
+                <p>댓글을 남기려면 <a href="{% url 'page1:login' %}?next={{ request.path }}">로그인 후 댓글 남기기</a></p>
+            <!-- {% endif %} -->
+
+
+
         </section>
     </div>
 </body>

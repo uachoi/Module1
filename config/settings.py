@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'page1.apps.page1Config',
     'common.apps.CommonConfig',
     'community.apps.CommunityConfig',
-    'mypage',
+    #'mypage',
+    'mypage.apps.MypageConfig',
 ]
 
 MIDDLEWARE = [

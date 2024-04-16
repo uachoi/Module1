@@ -8,6 +8,9 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 
+from django.contrib.auth.signals import user_logged_out
+from django.dispatch import receiver
+
 from django.http import JsonResponse
 
 #from page1.models import Profile
@@ -21,9 +24,16 @@ def login_page(request):
 def my_page(request):   # 비회원으로 마이페이지접속할 때 
     return render(request,'community/my_page.html')
 
+@receiver(user_logged_out)       # 비회원 사용자
+def on_user_logged_out(sender, request, user, **kwargs):
+    return main_page(request)
+
 def main_page(request):     # 비회원 메인 페이지
     posts = Posting.objects.all()       # 모든 게시글을 가져옴 --> related_name
     return render(request, 'community/main_page.html',{'postings': posts,})
+
+
+
 
 @login_required
 def loginok_page(request):  # 로그인 상태의 메인페이지
@@ -62,17 +72,27 @@ def create_post(request):
     categories=Category.objects.all()
     return render(request, 'community/create_post.html', {'form': form, 'categories':categories})
 
-
-
-
+@login_required
 def post_detail(request, pk):
     post = get_object_or_404(Posting, pk=pk)
-    postings = Posting.objects.get(pk=pk)
+    #postings = Posting.objects.get(pk=pk)
+    comments=Comment.objects.filter(post=post)
+    
+    post.views += 1
+    post.save()
+    return render(request, 'community/post_detail.html',{'post': post,'comments': comments} )      ## {'posting': posting}
+
+
+#@receiver(user_logged_out)      ##### 비회원일 때 
+def nonuser_post_detail(request, pk):
+    post = get_object_or_404(Posting, pk=pk)
+    #postings = Posting.objects.get(pk=pk)
+    comments=Comment.objects.filter(post=post)
     
     post.views += 1
     post.save()
 
-    return render(request, 'community/post_detail.html',{'post': post,'postings': postings} )      ## {'posting': posting}
+    return render(request, 'community/nonuser_post_detail.html',{'post': post,'comments': comments} ) 
 
 ##  위의 코드 : board1에서 추가  ,,  community 앱과 모델, 필드명 맞춰서 수정
 
@@ -90,24 +110,25 @@ def add_comment(request, pk):       # 댓글 남기기
         return redirect('post_detail', pk=post.pk)
     
     
-def like_post(request, pk):     # 게시물에 좋아요 달기
-    post = get_object_or_404(Posting, pk=pk)
-    # if post.likes.filter(id=request.user.id).exists(): 
-    #     post.likes.remove(request.user)
-    # else:
-    #     post.likes.add(request.user)
-    # return redirect('post_detail', pk=pk)
+def like_post(request, pk):
+	post = get_object_or_404(Posting, id=pk)       # pk=pk
+	# if post.likes.filter(id=request.user.id).exists():
+	# 	post.likes.remove(request.user)
+	# 	liked = False
+	# else:
+	# 	post.likes.add(request.user)
     
-    ## 아래 세 줄 추가
-    post.likes += 1         # 좋아요 카운트
-    post.save()
-    
-    return JsonResponse({'likes': post.likes}, pk=pk)
-    #return redirect(request, 'post_detail', {'post': post}, pk=pk)       #return redirect('post_detail', pk=pk)
-
+	# 	liked = True
+	# return JsonResponse({'liked': liked, 'likes': post.likes.count()})
+ 
+    #post.likes += 1
+    #post.save()
     
     
+    ##  위의 코드 : board1에서 추가  ,,  community 앱과 모델, 필드명 맞춰서 수정
     
+    
+    ## 밑에 코드들은 마이페이지에 해당하는 뷰 함수
 
 def post_delete(request, pk):   # 게시글 삭제
     post = get_object_or_404(Posting, pk=pk)

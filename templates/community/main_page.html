@@ -70,12 +70,18 @@ figcaption {
         <a href="{% url 'common:login'%}">        <!--community => common  /  "/common/login.html"  / 메인에서 로그인 버튼을 클릭하면 로그인화면으로-->
             <button class="btn btn-outline-success" type="button">Login</button>
         </a>
-        <a href="/mypage/mypage.html">
+        <a href="./my_page.html">
             <button class="btn btn-outline-success" type="button">My Page</button>
         </a>
     </nav>
     
-   
+    <div class="underline"></div>
+    <div class="center">
+        <h1>🍴맛집 커뮤니티✨</h1>
+        {% if user.is_authenticated %}
+            <span id="online-users" class="right">현재 접속 ID: 비회원</span>
+        {% endif %}
+    </div>
 
     <!-- 가운데 정렬된 검색 컨테이너 -->
     <div class="search-container">
@@ -89,19 +95,19 @@ figcaption {
 
     <hr/>
 
-    <h1>게시물 목록</h1>
+    <h1>📃 게시물 목록</h1>
     <ul>
         <!-- posts 데이터를 반복하며 게시물을 표시합니다 // post->posing -->
         {% for posting in postings %}
             <li>
-                <a href="{% url 'post_detail' pk=posting.pk %}">       <!--'post_detail' post_id=posting.pk-->
+                <a href="{% url 'nonuser_post_detail' pk=posting.pk %}">       <!--'post_detail' post_id=posting.pk-->
                     <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:100px; height:100px;">
                 </a>
                 <h3>{{ posting.title }}</h3>
-                <p>작성자: {{ posting.author.username }}</p>
+                <p>작성자: {{ posting.author }}</p>
                 <p>작성 시간: {{ posting.created_at }}</p>
                 <p>좋아요 수: {{ posting.likes_count }}</p> <!-- 좋아요 수 표시 -->
-                <p>본 횟수: {{ posting.views_count }}</p> <!-- 본 횟수 표시 -->
+                <p>조회수: {{ posting.views }}</p> <!-- 본 횟수 표시 -->
             </li>
         {% endfor %}
     </ul>

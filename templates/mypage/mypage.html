@@ -78,12 +78,12 @@
 
     <!-- 버튼들 -->
     <div class="center button-container">
-        <a href="{% url 'edit_password' author=author %}" class="button">비밀번호 변경</a>        <!--  {% url 'edit_password' user_id=user_id %}  -->
-        <a href="{% url 'remove_user' author=author %}" class="button">회원 탈퇴</a>
+        <a href="{% url 'mypage:edit_password' author=user.username %}" class="button">비밀번호 변경</a>
+        <a href="{% url 'mypage:remove_user' author=user.username %}" class="button">회원 탈퇴</a>
         <a href="{% url 'common:login' %}" class="button">로그아웃</a>
     </div>
 
-    <form action="{% url 'delete_post' %}" method="post">
+    <form action="{% url 'mypage:delete_post' %}" method="post">
         {% csrf_token %}
         <!-- 표 -->
         <table>
@@ -101,10 +101,11 @@
                 {% for post in posts %}
                 <tr>
                     <td><input type="checkbox" name="post_ids" value="{{ post.id }}"></td>
-                    <td><a href="{% url 'post_detail' post.id %}">{{ post.subject }}</a></td>
-                    <td>{{ post.tag }}</td>
-                    <td>{{ post.view_count }}</td>
-                    <td>{{ post.post_create_time }}</td>
+                    <td><a href="/community/community/post_detail/{{ post.pk }}">{{ post.title }}</a></td>
+                    {% comment %} <td><a href="{% url 'community:post_detail' posti.id %}">{{ post.title }}</a></td> {% endcomment %}
+                    <td>{{ post.tag.name }}</td>
+                    <td>{{ post.views }}</td> <!--post.views-->
+                    <td>{{ post.created_at }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

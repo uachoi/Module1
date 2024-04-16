@@ -32,7 +32,7 @@
 
     <div class="content">
         <h1>!회원 탈퇴!</h1>
-        <form action="{% url 'confirm_remove' user_id %}" method="post">
+        <form action="{% url 'mypage:confirm_remove' author=user.username %}" method="post">
             {% csrf_token %}
             <p>{{ user_id }}님의 회원 탈퇴를 진행하시려면 아래 비밀번호를 입력하세요.</p>
             <div>

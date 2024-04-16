@@ -64,7 +64,9 @@ def mypage(request):
     author = request.user.username
     # author가 "test"인 데이터를 가져옴
     posts = Posting.objects.filter(author=author, is_del=False)      #author=author
-    return render(request, 'mypage/mypage.html', {'author': author, 'posts': posts})
+    #post_ids = [post.id for post in posts]
+    return render(request, 'mypage/mypage.html', {'author': author, 'posts': posts})    # 원하는대로 데이터 잘
+    
 
 def delete_post(request):
     if request.method == 'POST':
