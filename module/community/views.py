@@ -16,7 +16,8 @@ from django.http import JsonResponse
 #from page1.models import Profile
 
 def index(request):
-    return render(request, 'community/main_page.html')
+    return render(request, 'community/main.html')
+    #return render(request, 'community/main_page.html')
 
 def login_page(request):
     return render(request, 'community/login.html')
@@ -30,7 +31,7 @@ def on_user_logged_out(sender, request, user, **kwargs):
 
 def main_page(request):     # 비회원 메인 페이지
     posts = Posting.objects.all()       # 모든 게시글을 가져옴 --> related_name
-    return render(request, 'community/main_page.html',{'postings': posts,})
+    return render(request, 'community/main.html',{'postings': posts,})
 
 
 
