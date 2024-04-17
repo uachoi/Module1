@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>맛집 커뮤니티</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+    /* 중앙 정렬을 위한 스타일 */
+.center {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    height: 50px; /* 화면의 전체 높이를 차지 */
+    }
+    /* 헤딩에 대한 스타일 */
+    h1 {
+        font-size: 36px;
+}
+     
+ 
+   /* 이미지 컨테이너 스타일 */
+.image-container {
+    display: flex; /* Flexbox를 사용하여 이미지를 나란히 배치 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 20px; /* 이미지 사이의 간격 */
+    margin: 20px 0; /* 상하 여백 추가 */
+}
+
+/* 이미지 스타일 */
+.image-container img {
+    width: 400px; /* 모든 이미지의 너비를 크게 설정 */
+    height: 400px; /* 모든 이미지의 높이를 크게 설정 */
+    object-fit: cover; /* 이미지를 정사각형에 꽉 차게 채움 */
+    border-radius: 10px; /* 이미지의 가장자리를 약간 둥글게 처리 */
+    cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
+}
+
+/* 검색창과 제목 가운데 정렬 */
+.search-container {
+    text-align: center; /* 가운데 정렬 */
+    margin: 20px 0; /* 상하 여백 추가 */
+}
+
+/* 설명글 스타일 */
+figcaption {
+    font-weight: bold; /* 글자 두께를 두껍게 설정 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 8px; /* 위쪽 간격 추가 */
+}
+
+  /* UL 요소를 플렉스 컨테이너로 설정하고 가로로 나열 */
+  ul {
+            display: flex; /* 플렉스 레이아웃 사용 */
+            flex-wrap: wrap; /* 요소들이 자동으로 다음 줄로 이동할 수 있게 함 */
+            justify-content: space-between; /* 요소들 간 간격을 자동으로 조절 */
+            width: 100%; /* 가로로 꽉 차게 설정 */
+        }
+
+        /* 각 LI 요소의 스타일 */
+        li {
+            flex: 1 1 calc(33.3333% - 10px); /* 각 요소를 3열로 나눔 */
+            margin: 5px; /* 각 요소 사이에 간격 추가 */
+            box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 조절 */
+        }
+
+        /* 이미지 스타일 */
+        img {
+            width: 100%; /* 이미지를 부모 요소에 맞게 조절 */
+            height: auto; /* 이미지를 자동으로 조절 */
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="{% url 'loginok' %}"> <!--main_page => loginok  // 홈을 눌렀을 때 메인페이지(로그인한 사용자)로-->
+            <button class="btn btn-outline-success" type="button">Home</button>
+        </a>
+        <a href="{% url 'main_page' %}">  <!--logout => main_page // 로그아웃 버튼을 눌렀을 때 비회원 메인페이지로 전환-->
+            <button class="btn btn-outline-danger" type="button">Logout</button>
+        </a>
+        <a href="{% url 'mypage:mypage' %}">
+            <button class="btn btn-outline-success" type="button">My Page</button>      <!-- // 마이페이지 버튼을 눌렀을 때 mypage/마이페이지로 전환-->
+        </a>
+    </nav>
+
+    <div class="underline"></div>
+
+    <div class="center">
+        <h1>🍴맛집 커뮤니티✨</h1></div>
+    <div class="center">    
+        {% if user.is_authenticated %}
+            <span id="online-users" class="right">현재 접속 ID: {{ user.username }}</span>
+        {% endif %}
+    </div>
+
+
+    <div class="search-container">
+        <h1>검색해보세요</h1>
+        <form action="/search/" method="get">
+            <label for="search">Search:</label>
+            <input type="text" id="search" name="q" placeholder="Enter search term" required>
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+    </div>
+
+    <a href="{% url 'create_post' %}">
+        <button class="btn btn-outline-success" type="button">글 작성</button>
+    </a>
+
+    <hr/>
+
+    <h1>📃 게시물 목록</h1>
+    <ul>
+        <!-- posts 데이터를 반복하며 게시물을 표시합니다 // post->posing -->
+        {% for posting in postings %}
+            <li>
+                <a href="{% url 'post_detail' pk=posting.pk %}">   <!-- 하이퍼링크 설정 //post_id=**고정: posting.pk**-->
+                    <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:100px; height:100px;">
+                </a>
+                <h3>{{ posting.title }}</h3>
+                
+                <p>작성자: {{ posting.author}}</p>
+                <p>작성 시간: {{ posting.created_at }}</p>
+                <p>좋아요 수: {{ posting.likes.count }}</p> <!--posting.likes-->
+                <p>조회수: {{ posting.views }}</p> 
+                
+            </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>{{ post.title }}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+        .post-container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .community-title {
+            font-size: 2em;
+            color: #090909;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .post-title {
+            font-size: 1.5em;
+            color: #333;
+            border-bottom: 2px solid #050505;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        .post-content p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #666;
+            margin-top: 10px;
+        }
+        .post-image img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+        .main-page-link {
+            font-size: 0.9em; /* 링크의 글씨 크기를 작게 조정 */
+            margin-top: 20px; /* 링크 위에 여백을 추가 */
+            display: block; /* 블록 레벨 요소로 변경 */
+            text-align: center; /* 중앙 정렬 */
+            color: #555; /* 글씨 색상을 변경 */
+            text-decoration: underline; /* 밑줄을 추가하여 클릭 가능한 링크임을 나타냄 */
+            margin-bottom: 20px; /* 링크 아래 여백을 추가 */
+        }
+        .likes, .comments-section, .post-actions {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 20px;
+        }
+        .comments-section .comment strong {
+            color: #27ae60;
+        }
+        .comments-section .comment {
+            padding: 5px 0;
+        }
+        .comment-box {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .heart {
+        color: red; /* 하트 색상을 빨간색으로 설정 */
+        font-size: 16px; /* 하트의 크기 설정 */
+        vertical-align: middle; /* 텍스트와 정렬을 맞춤 */
+        }
+        .likes span {
+        font-size: 16px; /* 좋아요 숫자 크기 설정 */
+        vertical-align: middle; /* 텍스트와 정렬을 맞춤 */
+        }
+        .like-button i {
+        color: #f47e7e; /* 아이콘 색상 */
+        font-size: 40px; /* 아이콘 크기 */
+        }
+        .like-button:hover i {
+        color: #eb0f0f; /* 호버 시 아이콘 색상 변경 */
+        }
+    </style>
+</head>
+<body>
+    <div class="post-container">
+        <h1 class="community-title">맛집 커뮤니티✨</h1>
+        <article>
+            <h2 class="post-title">{{ posting.title }}</h2>
+            <div class="post-content">
+                <p>{{ post.content }}</p> <!--  posting => post  -->
+            </div>
+            {% if post.image1 %} <!--  posting => post  -->
+                <div class="post-image">
+                    <img src="{{ post.image1.url }}" alt="첨부 이미지1" />       <!--  posting => post  -->
+                </div>
+            {% endif %}
+            <div class="likes">
+                <form id="like-form" action="{% url 'post_detail' pk=post.pk %}" method="post">     <!--community:like_post/ pk=post.pk 에서 변경-->
+                    {% csrf_token %}
+                    <button type="submit" class="like-button" style="background: none; border: none; cursor: pointer;">
+                        <i class="fas fa-thumbs-up"></i> <!-- 따봉 아이콘 -->
+                    </button>
+
+                </form> 
+
+                <span class="heart">&#10084;</span> <!-- 하트 아이콘 -->
+                <span id="like-count">{{ post.likes.count }}</span>     <!--  posting => post  -->
+            </div>
+
+            <!--Ajax 추가-->
+            <script>
+                $(document).ready(function(){
+                    $('#like-form').on('submit', function(event){
+                        event.preventDefault();
+                        var form = $(this);
+                        $.ajax({
+                            type: 'POST',
+                            url: form.attr('action'),
+                             data: form.serialize(), // 중요: CSRF 토큰 포함여부 확인
+                             success: function(response){
+                                $('#like-count').text(response.likes); // 좋아요 카운트 업데이트
+                                },
+                            error: function(xhr){
+                                console.log('Error:', xhr.responseText);
+                                }
+                            });
+                        });
+                    });
+            </script>
+            
+        </article>
+
+        <!-- 메인 화면으로 가는 링크 -->
+        <a href="{% url 'loginok' %}" class="main-page-link">메인 화면</a>
+
+        <!-- 댓글 섹션 -->
+        <section class="comments-section">
+            <h3>댓글</h3>
+            <!-- 댓글 목록 -->
+            {% for comment in comments %}
+                <div class="comment">
+                    <strong>{{ comment.author.username }}</strong>: {{ comment.text }}
+                </div>
+            {% empty %}
+                <p>댓글이 없습니다.</p>
+            {% endfor %}
+            <!-- 댓글 입력 폼 -->
+            {% if user.is_authenticated %}
+                <form action="{% url 'add_comment' post.pk %}" method="post">      <!--posting.id에서 변경-->
+                    {% csrf_token %}
+                    <textarea name="comment" placeholder="댓글을 남겨주세요"></textarea>
+                    <input type="submit" value="댓글 남기기">
+                </form>
+            {% else %}
+                <p><a href="{% url 'page1:login' %}?next={{ request.path }}">로그인 후 댓글 남기기</a></p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>

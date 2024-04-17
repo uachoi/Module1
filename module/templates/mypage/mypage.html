@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이 페이지</title>
+    <style>
+        /* 밑줄 스타일 */
+        .underline {
+            border-bottom: 1px solid black;
+            margin-bottom: 20px; /* 여백 추가 */
+        }
+
+        /* 가운데 정렬 */
+        .center {
+            text-align: center;
+        }
+
+        /* 오른쪽 정렬 */
+        .right {
+            text-align: right;
+        }
+
+        /* 버튼 스타일 */
+        .button {
+            margin: 10px; /* 버튼 간격 조절 */
+            padding: 10px 20px; /* 버튼 내부 여백 설정 */
+            background-color: #4CAF50; /* 배경색 설정 */
+            color: white; /* 텍스트 색상 설정 */
+            border: none; /* 테두리 제거 */
+            border-radius: 5px; /* 테두리 모서리 둥글게 만들기 */
+            cursor: pointer; /* 포인터로 마우스 커서 변경 */
+        }
+
+        /* 표 스타일 */
+        table {
+            border-collapse: collapse; /* 테두리 합치기 */
+            width: 100%; /* 표 전체 너비 */
+        }
+
+        th, td {
+            border: 1px solid #dddddd; /* 테두리 설정 */
+            text-align: left; /* 텍스트 정렬 */
+            padding: 8px; /* 셀 안 여백 */
+        }
+
+        th {
+            background-color: #f2f2f2; /* 헤더 배경색 */
+        }
+
+        /* 삭제 버튼 스타일 */
+        .delete-button {
+            margin: 10px auto; /* 가운데 정렬 */
+            display: block; /* 블록 요소로 설정하여 가로 정렬 */
+            padding: 10px 20px; /* 삭제 버튼 내부 여백 설정 */
+            background-color: #f44336; /* 배경색 설정 */
+            color: white; /* 텍스트 색상 설정 */
+            border: none; /* 테두리 제거 */
+            border-radius: 5px; /* 테두리 모서리 둥글게 만들기 */
+            cursor: pointer; /* 포인터로 마우스 커서 변경 */
+        }
+        
+        /* 버튼 컨테이너 스타일 */
+        .button-container {
+            margin-bottom: 20px; /* 여백 추가 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 상단 문구 -->
+    <div class="center">
+        <h1>🍴맛집 커뮤니티✨</h1>
+        <span id="online-users" class="right">접속자: {{ author }}</span>      <!-- 접속자를  user_id => subject  변경-->
+    </div>
+
+    <!-- 밑줄 -->
+    <div class="underline"></div>
+
+    <!-- 버튼들 -->
+    <div class="center button-container">
+        <a href="{% url 'mypage:edit_password' author=user.username %}" class="button">비밀번호 변경</a>
+        <a href="{% url 'mypage:remove_user' author=user.username %}" class="button">회원 탈퇴</a>
+        <a href="{% url 'common:login' %}" class="button">로그아웃</a>
+    </div>
+
+    <form action="{% url 'mypage:delete_post' %}" method="post">
+        {% csrf_token %}
+        <!-- 표 -->
+        <table>
+            <thead>
+                <tr>
+                    <th></th> <!-- 체크박스 열 -->
+                    <th>제목</th>
+                    <th>종류</th>
+                    <th>조회수</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 데이터 출력 -->
+                {% for post in posts %}
+                <tr>
+                    <td><input type="checkbox" name="post_ids" value="{{ post.id }}"></td>
+                    <td><a href="/community/community/post_detail/{{ post.pk }}">{{ post.title }}</a></td>
+                    {% comment %} <td><a href="{% url 'community:post_detail' posti.id %}">{{ post.title }}</a></td> {% endcomment %}
+                    <td>{{ post.tag.name }}</td>
+                    <td>{{ post.views }}</td> <!--post.views-->
+                    <td>{{ post.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="delete-button">삭제</button>
+    </form>
+</body>
+</html>
