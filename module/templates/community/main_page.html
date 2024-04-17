@@ -27,8 +27,8 @@
 
 /* 이미지 스타일 */
 .image-container img {
-    width: 400px; /* 모든 이미지의 너비를 크게 설정 */
-    height: 400px; /* 모든 이미지의 높이를 크게 설정 */
+    width: 800px; /* 모든 이미지의 너비를 크게 설정 */
+    height: 800px; /* 모든 이미지의 높이를 크게 설정 */
     object-fit: cover; /* 이미지를 정사각형에 꽉 차게 채움 */
     border-radius: 10px; /* 이미지의 가장자리를 약간 둥글게 처리 */
     cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
@@ -96,7 +96,7 @@ figcaption {
 
     <!-- 가운데 정렬된 검색 컨테이너 -->
     <div class="search-container">
-        <h1>검색해보세요</h1>
+        <h1>먹고 싶은 것을 검색하세요</h1>
         <form action="/search/" method="get">
             <label for="search">Search:</label>
             <input type="text" id="search" name="q" placeholder="Enter search term" required>
@@ -106,22 +106,32 @@ figcaption {
 
     <hr/>
 
-    <h1>📃 게시물 목록</h1>
-    <ul>
+    {% comment %} <h1>📃 게시물 목록</h1> {% endcomment %}
+    <div class=image-container img>
+        <ul style="list-style: none;">
         <!-- posts 데이터를 반복하며 게시물을 표시합니다 // post->posing -->
         {% for posting in postings %}
             <li>
-                <a href="{% url 'nonuser_post_detail' pk=posting.pk %}">       <!--'post_detail' post_id=posting.pk-->
-                    <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:100px; height:100px;">
+                <a href="{% url 'post_detail' pk=posting.pk %}">   <!-- 하이퍼링크 설정 //post_id=**고정: posting.pk**-->               
+                
+                    <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:400px; height:400px;">   
                 </a>
-                <h3>{{ posting.title }}</h3>
-                <p>작성자: {{ posting.author }}</p>
-                <p>작성 시간: {{ posting.created_at }}</p>
-                <p>좋아요 수: {{ posting.likes_count }}</p> <!-- 좋아요 수 표시 -->
-                <p>조회수: {{ posting.views }}</p> <!-- 본 횟수 표시 -->
+                    <h3 style="margin-bottom: 50px;"><strong>{{ posting.title }}</strong></h3>
+
+                    <p style="line-height: 0.2;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                        </svg> {{ posting.views }}</p> <!-- 본 횟수 표시 -->
+                    <p style="line-height: 0.2;">작성자: {{ posting.author }}</p>
+                    <p style="line-height: 0.2;">좋아요 {{ posting.likes.count }}</p> <!-- 좋아요 수 표시 -->
+                    <p style="line-height: 0.2;">{{ posting.created_at | date:"Y.m.d" }}</p>
+                
+              
+                
             </li>
         {% endfor %}
     </ul>
+</div>
 
     </body>
  
