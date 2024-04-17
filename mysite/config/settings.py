@@ -56,7 +56,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-          'DIRS': [BASE_DIR / 'templates'],
+           'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,7 +136,8 @@ MEDIA_ROOT = BASE_DIR/'media'
 
 
 LOGIN_REDIRECT_URL ='/community/loginok.html'
-LOGOUT_REDIRECT_URL = '/community/main.html'
+
+LOGOUT_REDIRECT_URL = '/community/'
 
 
 

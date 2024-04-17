@@ -65,7 +65,7 @@ figcaption {
 <body>
    
     <nav>
-        <a href="./main.html">
+        <a href="/community/">
             <button class="btn btn-outline-success" type="button">Home</button>
         </a>
         <a href="/community/login.html">
@@ -75,44 +75,59 @@ figcaption {
             <button class="btn btn-outline-success" type="button">My Page</button>
         </a>
     </nav>
-    
-   
 
-    <!-- 가운데 정렬된 검색 컨테이너 -->
-    <div class="search-container">
-        <h1>검색해보세요</h1>
-        <form action="/search/" method="get">
-            <label for="search">Search:</label>
-            <input type="text" id="search" name="q" placeholder="Enter search term" required>
+
+
+  <!-- 가운데 정렬된 검색 컨테이너 -->
+  <div class="search-container">
+    <h1 class="community-title" style="margin-bottom: 40px;">✨맛집 커뮤니티✨</h1>
+
+
+
+    <h4>먹고싶은 것을 검색하세요</h4>
+   
+ <!-- 검색기능  추가 폼 -->
+    <form action="{% url 'search' %}" method="get">
+         
+            <input type="text" name="q" placeholder="Enter search" value="{{ query }}">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
-    </div>
+        
+
+</div>
 
     <hr/>
 
     <h1></h1>
-    <div class=image-container img>
+
+<!-- 이미지 컨테이너 스타일 (조금 바꿔봤어요 붙어넣기 하셔서 테이블 이름만 바꿔주세요)-->
+<div class=image-container img>
     <ul style="list-style: none;">
         
         <!-- posts 데이터를 반복하며 게시물을 표시합니다 -->
         {% for post in posts %}
-            <li>
-                
-                    <img src="{{ post.image1.url }}" alt="{{ post.title }}" style="width:400px; height:400px;">   
-                    <h3>{{ post.title }}</h3>
-                    <p>작성자: {{ post.author.username }}</p>
-                    <p>작성 시간: {{ post.created_at }}</p>
-                    <p>좋아요 수: {{ post.likes_count }}</p> <!-- 좋아요 수 표시 -->
-                    <p>본 횟수: {{ post.views_count }}</p> <!-- 본 횟수 표시 -->
-                    
-                
-              </li>
+        <li>
+            <a href="{{ post_url }}">
+                <img src="{{ post.image1.url }}" alt="{{ post.title }}" style="width:400px; height:400px; margin-bottom: 20px;" >   
+            </a>
+            <h3 style="margin-bottom: 50px;"><strong>{{ post.title }}</strong></h3>
+        
+            <p style="line-height: 0.2;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+             
+                </svg> {{ post.views_count }}</p> <!-- 본 횟수 표시 -->
+            <p style="line-height: 0.2;">작성자: {{ post.author.username }}</p>
+            <p style="line-height: 0.2;margin-bottom: 30px;">좋아요 {{ post.likes_count }}</p> <!-- 좋아요 수 표시 -->
+            <p style="line-height: 0.2;font-size: 0.9rem;">{{ post.created_at | date:"Y.m.d" }}</p>
+        </li>
+        
 
         {% endfor %}
     
     
     </ul>
-  
+
 </div>
     </body>
  

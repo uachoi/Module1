@@ -1,3 +1,4 @@
+
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
@@ -6,8 +7,8 @@ from community import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-
-
+ # 검색기능 추가
+from .views import search_results
 
 
 
@@ -21,12 +22,11 @@ urlpatterns = [
     path('loginok.html', views.loginok_page, name='loginok'),
     path('logout.html/', auth_views.LogoutView.as_view(), name='logout'),
     path('my_page2.html/', views.my_page2, name='my_page2'),
-    path('community/create_post/', views.create_post, name='create_post'),
-  
+    path('create_post/', views.create_post, name='create_post'),
+    # 검색기능 추가
+     path('search/', search_results, name='search'),
 
-   
-
-      
+     
 
 ]
 if settings.DEBUG:
