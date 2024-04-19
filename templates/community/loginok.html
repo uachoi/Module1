@@ -80,7 +80,8 @@ figcaption {
         <a href="{% url 'loginok' %}"> <!--main_page => loginok  // 홈을 눌렀을 때 메인페이지(로그인한 사용자)로-->
             <button class="btn btn-outline-success" type="button">Home</button>
         </a>
-        <a href='./' >  <!--logout => main_page // 로그아웃 버튼을 눌렀을 때 비회원 메인페이지로 전환-->
+        <a href="{% url 'logout' %}">
+        {% comment %} <a href="{% url '' %}" >  <!--logout => main_page // 로그아웃 버튼을 눌렀을 때 비회원 메인페이지로 전환--> {% endcomment %}
             <button class="btn btn-outline-danger" type="button">Logout</button>
         </a>
         <a href="{% url 'mypage:mypage' %}">
@@ -91,29 +92,29 @@ figcaption {
     <div class="underline"></div>
 
     <div class="center">
-        <h1>🍴맛집 커뮤니티✨</h1></div>
+        <h1>🍽 너의 맛집은❔</h1></div>
     <div class="center">    
         {% if user.is_authenticated %}
-            <span id="online-users" class="right">현재 접속 ID: {{ user.username }}</span>
+            <span id="online-users" class="right">👤 현재 접속 ID: {{ user.username }}</span>
         {% endif %}
     </div>
 
 
     <div class="search-container">
-        <h1>먹고 싶은 것을 검색하세요</h1>
-        <form action="{% url 'search' %}" method="get">
-            <div class="form-group">
-                <input type="text" id="search" name="q" placeholder="검색어 입력" required>
-                <select name="category" id="id_category">
-                    <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
+                <h1>먹고 싶은 것을 검색하세요</h1>
+                <form action="{% url 'search' %}" method="get">
+                    <div class="form-group">
+                        <input type="text" id="search" name="q" placeholder="검색어 입력" required>
+                        <select name="category" id="id_category">
+                            <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button class="btn btn-outline-success" type="submit">검색</button>
+                </form>
             </div>
-            <button class="btn btn-outline-success" type="submit">검색</button>
-        </form>
-    </div>
 
     <a href="{% url 'create_post' %}">
         <button class="btn btn-outline-success" type="button">글 작성</button>

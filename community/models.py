@@ -25,7 +25,7 @@ class Posting(models.Model):    # 게시글 작성 모델
     updated_at = models.DateTimeField(auto_now=True)
     
     views = models.IntegerField(default=0)
-    likes = models.IntegerField(default=0)
+    #likes = models.IntegerField(default=0)
     #likes = models.ManyToManyField(User, related_name='posting_like')
     comments = models.IntegerField(default=0)
     
@@ -39,7 +39,7 @@ class Posting(models.Model):    # 게시글 작성 모델
     def __str__(self):
         return self.title
     
-    def total_likes(self):
+    def count_likes(self):
         return self.likes.count()
 
     class Meta:
@@ -61,3 +61,11 @@ class Comment(models.Model):
     
     class Meta:
         db_table = 'comment'
+        
+
+class Like(models.Model):
+    post = models.ForeignKey(Posting, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('post', 'user')

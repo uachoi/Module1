@@ -129,36 +129,15 @@ figcaption {
     
     <div class="underline"></div>
     <div class="center">
-        <h1>🍴맛집 커뮤니티✨</h1></div>
+        <h1>🍽 너의 맛집은❔</h1></div>
     <div class="center">    
         {% if user.is_authenticated %}
-            <span id="online-users" class="right">현재 접속 ID: 비회원</span>     <!--로그아웃 상태로 고치기-->
+            <span id="online-users" class="right">👤 현재 접속 ID: {{user.username}}</span>     <!--로그아웃 상태로 고치기-->
+        {%else%}
+            <span id="online-users" class="right">👤 현재 접속 ID: 비회원</span> 
         {% endif %}
     </div>
 
-    <!-- 가운데 정렬된 검색 컨테이너 -->
-    {% comment %}
-    <div class="search-container">
-        <h1>먹고 싶은 것을 검색하세요</h1>
-        {% comment %} <form action="/search/" method="get">
-            <label for="search">Search:</label> <!-- {% endcomment %
-
-            <form action="{% url 'search' %}" method="get">
-                <input type="text" id="search" name="q" placeholder="Enter search term" required>
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-
-            <!-- 검색 시 카테고리로 필터링 가능하도록 추가-->
-
-            <div class="form-group">
-                <label for="id_category">음식 카테고리</label>
-                <select name="category" id="id_category">
-                    {% for category in categories %}
-                    <option value="{{ category.id }}">{{ category.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% endcomment %}
             <div class="search-container">
                 <h1>먹고 싶은 것을 검색하세요</h1>
                 <form action="{% url 'search' %}" method="get">
@@ -189,7 +168,6 @@ figcaption {
         {% for posting in postings %}
             <li>
                 <a href="{% url 'post_detail' pk=posting.pk %}">   <!-- 하이퍼링크 설정 //post_id=**고정: posting.pk**-->               
-                
                     <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:400px; height:400px; margin-bottom:20px;">   
                 </a>
                     <h3 style="margin-bottom: 50px;"><strong>{{ posting.title }}</strong></h3>

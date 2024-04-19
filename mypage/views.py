@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required  # 추가
-#from .models import MyPost
+from django.urls import reverse
 from django.contrib.auth import logout
 
 from community.models import Posting ## Post 앱의 모델을 사용
@@ -8,6 +8,8 @@ from community.models import Posting ## Post 앱의 모델을 사용
 #editpw 추가
 from django.contrib.auth.models import User
 from django.contrib import messages
+
+from django.contrib import admin
 
 def edit_password(request, author):        # author => username
     #user = Posting.objects.get(username=username)    # add
@@ -28,7 +30,7 @@ def change_password(request, author):
             # 새 비밀번호로 변경
             user.set_password(new_password)
             user.save()
-            return redirect('mypage')  # 비밀번호 변경 성공 페이지로 리다이렉트
+            return redirect('mypage:mypage')  # 비밀번호 변경 성공:  마이페이지로 리다이렉트
         else:
             # 비밀번호가 일치하지 않을 때 에러 메시지 설정
             error_message = '기존 비밀번호가 일치하지 않습니다.'
@@ -73,9 +75,16 @@ def delete_post(request):
         post_ids = request.POST.getlist('post_ids')  # 체크된 행의 ID 목록 가져오기
         # 각 체크된 행의 is_del 값을 True로 업데이트
         Posting.objects.filter(id__in=post_ids).update(is_del=True)
+        
+        # for post_id in post_ids:
+        #     post = Posting.objects.get(pk=post_id)
+        #     post.is_del = True
+        #     post.save()
+
     return redirect('mypage')  # my_page 뷰로 리다이렉트
 
 
 def logout_view(request):
     logout(request)
+    #auth.logout(request)
     return redirect('common:login')  # 로그아웃 후 로그인 페이지로 리다이렉트

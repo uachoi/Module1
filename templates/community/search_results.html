@@ -23,6 +23,16 @@
     border-radius: 10px; /* 이미지의 가장자리를 약간 둥글게 처리 */
     cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
 }
+.center {
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    height: 50px; /* 화면의 전체 높이를 차지 */
+    }
+    /* 헤딩에 대한 스타일 */
+    h1 {
+        font-size: 36px;
+}
  
 /* 검색창과 제목 가운데 정렬 */
 .search-container {
@@ -105,7 +115,7 @@ figcaption {
         <a href="/community/">
             <button class="btn btn-outline-success" type="button">Home</button>
         </a>
-        <a href="/common/login.html">
+        <a href="{% url 'common:login'%}">
             <button class="btn btn-outline-success" type="button">Login</button>
         </a>
         <a href="/community/my_page.html">
@@ -113,28 +123,33 @@ figcaption {
         </a>
     </nav>
 
+    <div class="underline"></div>
+    <div class="center">
+        <h1>🍽 너의 맛집은❔</h1></div>
+    <div class="center">    
+        {% if user.is_authenticated %}
+            <span id="online-users" class="right">👤 현재 접속 ID: {{user.username}}</span>     <!--로그아웃 상태로 고치기-->
+        {%else%}
+            <span id="online-users" class="right">👤 현재 접속 ID: 비회원</span> 
+        {% endif %}
+    </div>
+
     <!-- 가운데 정렬된 검색 컨테이너 -->
     <div class="search-container">
-        <h1 class="community-title" style="margin-bottom: 40px;">✨맛집 커뮤니티✨</h1>
-
-        <h3>먹고싶은 것을 검색하세요</h3>
-    
+        <h1>먹고 싶은 것을 검색하세요</h1>
         <form action="{% url 'search' %}" method="get">
-             
-                <input type="text" name="q" placeholder="Search..." value="{{ query }}">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-
-        <!-- 검색 시 카테고리로 필터링 가능하도록 추가-->
-        <div class="form-group">
-            <label for="id_category">음식 카테고리</label>
-            <select name="category" id="id_category">
-                <option value="">모든 카테고리</option>
-                {% for category in categories %}
-                <option value="{{ category.id }}" >{{ category.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+            <div class="form-group">
+                <input type="text" id="search" name="q" placeholder="검색어 입력" required>
+                    <select name="category" id="id_category">
+                        <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <button class="btn btn-outline-success" type="submit">검색</button>
+                </form>
+            </div>
             
 
 
@@ -148,7 +163,9 @@ figcaption {
             {% if results %}
                 {% for posting in results %}
                     <li>
+                    <a href="{% url 'post_detail' posting.pk %}">
                         <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:400px; height:400px;">
+                    </a>
                         <h3 style="margin-bottom: 50px;"><strong>{{ posting.title }}</strong></h3>
                         <p style="line-height: 0.2;">
                             <p style="line-height: 0.2;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">

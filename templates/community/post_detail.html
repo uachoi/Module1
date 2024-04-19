@@ -4,6 +4,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css"/>
+    <script defer src="slide.js"></script>
+    <!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^ Slick lib ^^^^^^^^^^^^^^^^^^^^^-->
+
+
     <title>{{ post.title }}</title>
     <style>
         body {
@@ -84,55 +90,238 @@
         .like-button:hover i {
         color: #eb0f0f; /* 호버 시 아이콘 색상 변경 */
         }
+
+        .slide{
+            width: 350px; /* 슬라이더의 너비 설정 */
+            height: 467px; /* 슬라이더의 높이 설정 */
+            overflow: hidden; /* 넘치는 이미지 숨김 */
+            border: 1px solid #ddd; /* 테두리 설정 */
+            border-radius: 5px; /* 모서리 둥글게 설정 */
+            {% comment %} margin: 0 auto; {% endcomment %}
+
+        }
+        .images{
+            display: flex; /**사진을 가로정렬**/
+            height:467px; /**slide의 높이에 맞게 높이를 바꾼다.**/
+            align-items: center;
+            transition: transform 0.5s; /** 0.5초의 듀레이션(동작의 시작해서 끝나는 시간)을 준다.**/
+        }
+        img{
+            width:350px; height:467px;/**slide 크기에 맞춘다.**/
+            object-fit: contain;
+          }
+        .box{
+            width: 350px; 
+            margin: 0 auto; /**중앙 정렬한다.**/
+          }
+          .back{
+            position:relative;
+            bottom: 170px; right: 32px;
+          }
+          .next{
+            position:relative;
+            bottom: 170px; left: 318px;
+          }
+          /**버튼디자인**/
+        button{
+            width: 30px; height: 30px;
+            color: white;
+            background: #646464;
+        }
+        button:active{/**버튼을 클릭하는 동안 색을 바꾼다.**/
+            background:#3e3e3e;
+        }
+        button:disabled{/**버튼 속성이 disabled되면 색을 바꾼다.**/
+            background: #cbcaca;
+        }
     </style>
 </head>
 <body>
     <div class="post-container">
-        <h1 class="community-title">맛집 커뮤니티✨</h1>
+        <h1 class="community-title">🍽 너의 맛집은❔</h1>
         <article>
             <h2 class="post-title">{{ posting.title }}</h2>
             <div class="post-content">
                 <p>{{ post.content }}</p> <!--  posting => post  -->
             </div>
-            <!-- 첨부 이미지 출력 -->
-            {% if post.image1 %} <!--  posting => post  -->
-                <div class="post-image">
-                    <img src="{{ post.image1.url }}" alt="첨부 이미지1" />       <!--  posting => post  -->
-                </div>
+
+            <div class="box">
+
+            <div class="slide">
+            <div class="images">
+
+            {% if post.image1 %}        <!-- 파일 1 -->
+                <img src="{{ post.image1.url }}" alt="첨부 이미지1" />       
             {% endif %}
+            {% if post.image2 %} <!-- 파일 2 -->
+                <img src="{{ post.image2.url }}" alt="첨부 이미지2" />      
+            {% endif %}
+            {% if post.image3 %} <!-- 파일 3 -->
+                <img src="{{ post.image3.url }}" alt="첨부 이미지3" />       
+            {% endif %}
+
+            {% comment %} {% for image in images %}
+            <img src="{{ image }}" alt="첨부 이미지">
+            {% endfor %} {% endcomment %}
+
+            </div>
+            </div>
+            
+            <button class="back">❮</button>
+            <button class="next">❯</button>
+            <script>
+                let pages = 0;//현재 인덱스 번호
+                let positionValue = 0;//images 위치값
+                const IMAGE_WIDTH = 350;//한번 이동 시 IMAGE_WIDTH만큼 이동한다.
+                //DOM
+                const backBtn = document.querySelector(".back")
+                const nextBtn = document.querySelector(".next")
+                const images = document.querySelector(".images")
+
+                const imageCount = document.querySelectorAll('.images img').length;     //add
+
+                // 이미지가 2개 이상인 경우에만 슬라이드 기능 적용
+        if (imageCount > 1) {
+            const maxPages = imageCount - 1;
+
+            function next() {
+                if (pages < maxPages) {
+                    backBtn.removeAttribute('disabled');
+                    positionValue -= IMAGE_WIDTH;
+                    images.style.transform = `translateX(${positionValue}px)`;
+                    pages += 1;
+                }
+                if (pages === maxPages) {
+                    nextBtn.setAttribute('disabled', 'true');
+                }
+            }
+
+            function back() {
+                if (pages > 0) {
+                    nextBtn.removeAttribute('disabled');
+                    positionValue += IMAGE_WIDTH;
+                    images.style.transform = `translateX(${positionValue}px)`;
+                    pages -= 1;
+                }
+                if (pages === 0) {
+                    backBtn.setAttribute('disabled', 'true');
+                }
+            }
+
+            function init() {
+                backBtn.setAttribute('disabled', 'true');
+                backBtn.addEventListener("click", back);
+                nextBtn.addEventListener("click", next);
+            }
+            init();
+        } else {
+            // 이미지가 1개 이하인 경우에는 버튼을 비활성화한다.
+            backBtn.setAttribute('disabled', 'true');
+            nextBtn.setAttribute('disabled', 'true');
+        }
+
+                {% comment %} const imageCount = {{ images|length }}; //추가
+                const maxPages = Math.ceil(imageCount / 3) - 1;     //추가
+
+                function next() {
+                    if (pages < maxPages) {
+                        backBtn.removeAttribute('disabled');
+                        positionValue -= IMAGE_WIDTH * 3;
+                        images.style.transform = `translateX(${positionValue}px)`;
+                        pages += 1;
+                    }
+                    if (pages === maxPages) {
+                        nextBtn.setAttribute('disabled', 'true');
+                    }
+                }
+            
+                function back() {
+                    if (pages > 0) {
+                        nextBtn.removeAttribute('disabled');
+                        positionValue += IMAGE_WIDTH * 3;
+                        images.style.transform = `translateX(${positionValue}px)`;
+                        pages -= 1;
+                    }
+                    if (pages === 0) {
+                        backBtn.setAttribute('disabled', 'true');
+                    }
+                } {% endcomment %}
+
+                    /////////////////////////////////////////////////////////
+                    
+                function next() {
+                    if (pages< 2) {
+                        backBtn.removeAttribute('disabled')//뒤로 이동해 더이상 disabled가 아니여서 속성을 삭제한다.
+                        positionValue -= IMAGE_WIDTH;//IMAGE_WIDTH의 증감을 positionValue에 저장한다.
+                        images.style.transform = `translateX(${positionValue}px)`;
+		                //x축으로 positionValue만큼의 px을 이동한다.
+                        pages += 1; //다음 페이지로 이동해서 pages를 1증가 시킨다.
+                    }
+                    if (pages === 2) { //
+                        nextBtn.setAttribute('disabled', 'true')//마지막 장일 때 next버튼이 disabled된다.
+                    }
+                }
+
+                function back() {
+                    if (pages > 0) {
+                        nextBtn.removeAttribute('disabled')
+                        positionValue += IMAGE_WIDTH;
+                        images.style.transform = `translateX(${positionValue}px)`;
+                        pages -= 1; //이전 페이지로 이동해서 pages를 1감소 시킨다.
+                    }
+                    if (pages === 0) {
+                        backBtn.setAttribute('disabled', 'true')//마지막 장일 때 back버튼이 disabled된다.
+                    }
+                }
+
+                function init() {  //초기 화면 상태
+                    backBtn.setAttribute('disabled', 'true'); //속성이 disabled가 된다.
+                    backBtn.addEventListener("click", back); //클릭시 다음으로 이동한다.
+                    nextBtn.addEventListener("click", next);//클릭시 이전으로 이동한다.
+                }
+                init();
+            </script>
+            </div>
+            
+
+
             <div class="likes">
-                <form id="like-form" action="{% url 'post_detail' pk=post.pk %}" method="post">     <!--community:like_post/ pk=post.pk 에서 변경-->
+                <form id="like-form" action="{% url 'like_post' pk=post.pk %}" method="post">     <!--community:like_post/ pk=post.pk 에서 변경-->
                     {% csrf_token %}
                     <button type="submit" class="like-button" style="background: none; border: none; cursor: pointer;">
                         <i class="fas fa-thumbs-up"></i> <!-- 따봉 아이콘 -->
                     </button>
-
-                </form> 
-
-                <span class="heart">&#10084;</span> <!-- 하트 아이콘 -->
-                <span id="like-count">{{ post.likes.count }}</span>     <!--  posting => post  -->
-            </div>
-
-            <!--Ajax 추가-->
-            <script>
-                $(document).ready(function(){
-                    $('#like-form').on('submit', function(event){
-                        event.preventDefault();
-                        var form = $(this);
-                        $.ajax({
-                            type: 'POST',
-                            url: form.attr('action'),
-                             data: form.serialize(), // 중요: CSRF 토큰 포함여부 확인
-                             success: function(response){
-                                $('#like-count').text(response.likes); // 좋아요 카운트 업데이트
+                    <script>
+                    $(document).ready(function(){
+                        $('#like-form').on('submit', function(event){
+                            event.preventDefault();
+                            var form = $(this);
+                            $.ajax({
+                                type: 'POST',
+                                url: form.attr('action'),
+                                data: form.serialize(), // CSRF 토큰 포함여부 확인
+                                success: function(response){
+                                    $('#like-count').text(response.likes_count);
+                                    if (response.liked) {
+                                        $('.like-button i').addClass('fas').removeClass('far'); // '좋아요' 상태일 때 아이콘 변경
+                                    } else {
+                                        $('.like-button i').addClass('far').removeClass('fas'); // '좋아요' 취소일 때 아이콘 변경
+                                    }
                                 },
-                            error: function(xhr){
-                                console.log('Error:', xhr.responseText);
+                                error: function(xhr){
+                                    console.log('Error:', xhr.responseText);
                                 }
                             });
                         });
                     });
-            </script>
+                    </script>
+                </form> 
+
+                <span class="heart">&#10084;</span> <!-- 하트 아이콘 -->
+                <span id="like-count">{{ likes_count }}</span>     <!--  posting => post  -->
+            </div>
+
+            
             
         </article>
 
@@ -140,7 +329,7 @@
         {% if user.is_authenticated %}
             <a href="{% url 'loginok' %}" class="main-page-link">메인 화면</a>
         {%else%}
-        <a href="{% url 'main_page' %}" class="main-page-link">메인 화면</a>
+            <a href="{% url 'community' %}" class="main-page-link">메인 화면</a>
         {%endif%}
 
         <!-- 댓글 섹션 -->
