@@ -34,10 +34,32 @@
         .post-title {
             font-size: 1.5em;
             color: #333;
-            border-bottom: 2px solid #050505;
+            {% comment %} border-bottom: 2px solid #050505; {% endcomment %}
             padding-bottom: 5px;
             margin-top: 20px;
+            
         }
+        .post-writer {
+            font-size: 1.05em; /* 글씨 크기를 제목의 1/2로 */
+            color: #444; /* 진한 회색 */
+            {% comment %} border-bottom: 2px solid #050505; {% endcomment %}
+            padding-bottom: 2px;
+            margin-top: 0;
+            text-align: right;
+        }
+        .post-date {
+            font-size: 0.95em; /* 글씨 크기를 제목의 1/2로 */
+            color: #777; /* 진한 회색 */
+            border-bottom: 2px solid #050505;
+            padding-bottom: 2px;
+            margin-top: 0;
+            text-align: right;
+        }
+        {% comment %} .post-title, .post-writer {
+            display: inline-block;
+            padding-bottom: 5px;
+        } {% endcomment %}
+        
         .post-content p {
             font-size: 1.1em;
             line-height: 1.6;
@@ -140,7 +162,9 @@
     <div class="post-container">
         <h1 class="community-title">🍽 너의 맛집은❔</h1>
         <article>
-            <h2 class="post-title">{{ posting.title }}</h2>
+            <h2 class="post-title">{{ post.title }}</h2>
+            <h2 class='post-writer'>작성자: {{post.author}}</h2>
+            <h2 class="post-date">게시일: {{ post.created_at | date:"Y.m.d H:i:s"}}</h2>
             <div class="post-content">
                 <p>{{ post.content }}</p> <!--  posting => post  -->
             </div>

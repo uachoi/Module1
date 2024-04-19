@@ -127,6 +127,7 @@ figcaption {
         <ul style="list-style: none;">
         <!-- posts 데이터를 반복하며 게시물을 표시합니다 // post->posing -->
         {% for posting in postings %}
+        {% if not posting.is_del %}
             <li>
                 <a href="{% url 'post_detail' pk=posting.pk %}">   <!-- 하이퍼링크 설정 //post_id=**고정: posting.pk**-->               
                 
@@ -145,6 +146,7 @@ figcaption {
               
                 
             </li>
+        {%endif%}
         {% endfor %}
     </ul>
 </div>

@@ -142,7 +142,7 @@ def search_results(request):
     elif category_id:
         # 카테고리만
         category = Category.objects.get(pk=category_id)
-        results = Posting.objects.filter(tag_id=category)
+        results = Posting.objects.filter(category=category)
     else:
         # 검색어와 카테고리가 모두 없음
         results = Posting.objects.all()

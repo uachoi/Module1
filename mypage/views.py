@@ -64,24 +64,31 @@ def confirm_remove(request, author):
 @login_required
 def mypage(request):
     author = request.user.username
-    # author가 "test"인 데이터를 가져옴
-    posts = Posting.objects.filter(author=author, is_del=False)      #author=author
-    #post_ids = [post.id for post in posts]
-    return render(request, 'mypage/mypage.html', {'author': author, 'posts': posts})    # 원하는대로 데이터 잘
+    if author==admin:   # 관리자가 마이페이지 접속 시
+        all_posts = Posting.objects.filter(is_del=False)
+        #author = request.user.username
+        return render(request, 'mypage/mypage.html', {'all_posts': all_posts})
+    else:
+        #author = request.user.username
+        # author가 "test"인 데이터를 가져옴 = 현재 사용자 게시글만 불러옴
+        #posts = Posting.objects.filter(author=author, is_del=False).select_related('author')        ##add
+        posts = Posting.objects.filter(author=author, is_del=False)      
+    #return render(request, 'mypage/mypage.html', {'posts': posts})
+        return render(request, 'mypage/mypage.html', {'author': author, 'posts': posts})
     
 
 def delete_post(request):
     if request.method == 'POST':
         post_ids = request.POST.getlist('post_ids')  # 체크된 행의 ID 목록 가져오기
         # 각 체크된 행의 is_del 값을 True로 업데이트
-        Posting.objects.filter(id__in=post_ids).update(is_del=True)
+        Posting.objects.filter(pk__in=post_ids).update(is_del=True)
         
         # for post_id in post_ids:
         #     post = Posting.objects.get(pk=post_id)
         #     post.is_del = True
         #     post.save()
 
-    return redirect('mypage')  # my_page 뷰로 리다이렉트
+    return redirect('mypage:mypage')  # my_page 뷰로 리다이렉트
 
 
 def logout_view(request):

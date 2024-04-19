@@ -162,6 +162,7 @@ figcaption {
             {% block content %}
             {% if results %}
                 {% for posting in results %}
+                {% if not posting.is_del %} <!--Delete flag-->
                     <li>
                     <a href="{% url 'post_detail' posting.pk %}">
                         <img src="{{ posting.image1.url }}" alt="{{ posting.title }}" style="width:400px; height:400px;">
@@ -177,11 +178,14 @@ figcaption {
                         <p style="line-height: 0.2;">좋아요 {{ posting.likes.count }}</p>
                         <p style="line-height: 0.2;">{{ posting.created_at | date:"Y.m.d" }}</p>
                     </li>
+                {%endif%}
                 {% endfor %}
             {% else %}
                 <!-- 검색 결과가 없을 때만 표시 -->
                 <li style="width: 100%; text-align: center; margin-top: 80px;">
+                    {% if results_count == 0 %}<!--삭제플래그가 T인 게시물만 있을 경우 -->
                     <h4>새로운 맛집을 공유해주세요!</h4>
+                    {%endif%}
                 </li>
             {% endif %}
             {% endblock %}

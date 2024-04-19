@@ -99,16 +99,29 @@
             </thead>
             <tbody>
                 <!-- 데이터 출력 -->
-                {% for post in posts %}
-                <tr>
-                    <td><input type="checkbox" name="post_ids" value="{{ post.id }}"></td>
-                    <td><a href="/community/community/post_detail/{{ post.pk }}">{{ post.title }}</a></td>
-                    {% comment %} <td><a href="{% url 'community:post_detail' posti.id %}">{{ post.title }}</a></td> {% endcomment %}
-                    <td>{{ post.tag.name }}</td>
-                    <td>{{ post.views }}</td> <!--post.views-->
-                    <td>{{ post.created_at }}</td>
-                </tr>
-                {% endfor %}
+                {% if request.user.is_superuser %}      <!--request.user.is_superuser-->
+                    {% for post in all_posts %}
+                    <tr>
+                        <td><input type="checkbox" name="post_ids" value="{{ post.pk }}"></td>
+                        <td><a href="/community/community/post_detail/{{ post.pk }}">{{ post.title }}</a></td>
+                        {% comment %} <td><a href="{% url 'community:post_detail' posti.id %}">{{ post.title }}</a></td> {% endcomment %}
+                        <td>{{ post.tag.name }}</td>
+                        <td>{{ post.views }}</td> <!--post.views-->
+                        <td>{{ post.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                {%else%}
+                    {% for post in posts %}
+                    <tr>
+                        <td><input type="checkbox" name="post_ids" value="{{ post.pk }}"></td>
+                        <td><a href="/community/community/post_detail/{{ post.pk }}">{{ post.title }}</a></td>
+                        {% comment %} <td><a href="{% url 'community:post_detail' posti.id %}">{{ post.title }}</a></td> {% endcomment %}
+                        <td>{{ post.tag.name }}</td>
+                        <td>{{ post.views }}</td> <!--post.views-->
+                        <td>{{ post.created_at | date:"Y.m.d H:i:s" }}</td>
+                    </tr>
+                    {% endfor %}
+                {%endif%}
             </tbody>
         </table>
         <button type="submit" class="delete-button">삭제</button>
