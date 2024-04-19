@@ -7,8 +7,8 @@
 </head>
 <body>
     <div class="form-container">
-        <h1>맛집 커뮤니티 글 수정하기✨</h1>
-        <form method="post" enctype="multipart/form-data" action="{% url 'post_edit' pk=post.pk %}">
+        <h1>✨글 수정하기✨</h1>
+        <form method="post" enctype="multipart/form-data" action="{% url 'post_edit' pk=posting.id %}">
             {% csrf_token %}
             {{ form.as_p }}
 

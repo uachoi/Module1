@@ -243,35 +243,6 @@
             backBtn.setAttribute('disabled', 'true');
             nextBtn.setAttribute('disabled', 'true');
         }
-
-                {% comment %} const imageCount = {{ images|length }}; //추가
-                const maxPages = Math.ceil(imageCount / 3) - 1;     //추가
-
-                function next() {
-                    if (pages < maxPages) {
-                        backBtn.removeAttribute('disabled');
-                        positionValue -= IMAGE_WIDTH * 3;
-                        images.style.transform = `translateX(${positionValue}px)`;
-                        pages += 1;
-                    }
-                    if (pages === maxPages) {
-                        nextBtn.setAttribute('disabled', 'true');
-                    }
-                }
-            
-                function back() {
-                    if (pages > 0) {
-                        nextBtn.removeAttribute('disabled');
-                        positionValue += IMAGE_WIDTH * 3;
-                        images.style.transform = `translateX(${positionValue}px)`;
-                        pages -= 1;
-                    }
-                    if (pages === 0) {
-                        backBtn.setAttribute('disabled', 'true');
-                    }
-                } {% endcomment %}
-
-                    /////////////////////////////////////////////////////////
                     
                 function next() {
                     if (pages< 2) {

@@ -198,16 +198,33 @@ def post_delete(request, pk):   # 게시글 삭제
     return redirect('loginok')        # 게시글을 삭제하면 메인화면으로
 
 
+# def post_edit(request, pk):
+#     post = get_object_or_404(Posting, pk=pk)
+#     if request.method == 'POST':
+#         form = PostForm(request.POST, instance=post)
+#         if form.is_valid():
+#             form.save()
+#             return redirect(reverse('post_detail', args=[pk]))
+#     else:
+#         form = PostForm(instance=post)
+#     return render(request, 'community/post_edit.html', {'form': form})
+
+
 def post_edit(request, pk):
     post = get_object_or_404(Posting, pk=pk)
+    
+    # GET 요청에서 폼을 초기화할 때 이전에 제출된 데이터를 사용하여 폼을 초기화합니다.
+    form = PostForm(instance=post)  # 이전에 제출된 데이터를 사용하여 폼을 초기화합니다.
+
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+        # POST 요청일 때는 폼에서 제출된 데이터를 처리합니다.
+        form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('community:post_detail', pk=post.pk)
-    else:
-        form = PostForm(instance=post)
+            return redirect('post_detail', pk=pk)
+
     return render(request, 'community/post_edit.html', {'form': form})
+
 
 ######^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^########
 

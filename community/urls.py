@@ -47,7 +47,10 @@ urlpatterns = [
     
     
     path('search/', search_results, name='search'),
-    path('post/<int:pk>/edit/', views.post_edit, name='post_edit'),
+    
+    path('post/<int:pk>/edit/', views.post_edit, name='post_edit'),        #원본코드
+    #path('post_edit/<int:pk>/edit/', views.post_edit, name='post_edit'),
+    #path('post_edit/<int:pk>/', views.post_edit, name='post_edit'),
 
 
 

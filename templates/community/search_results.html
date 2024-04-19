@@ -103,8 +103,14 @@ figcaption {
             display: block;
             margin-bottom: 5px;
         }
-        input[type="text"],
-        textarea,
+        {% comment %} input[type="text"],
+        textarea, {% endcomment %}
+
+        .right-top {
+            position: absolute;
+            top: 10px; /* 요소를 상단으로 이동 */
+            right: 10px; /* 요소를 오른쪽으로 이동 */
+        }
 
     </style>
 </head>
@@ -112,47 +118,63 @@ figcaption {
 <body>
    
     <nav>
-        <a href="/community/">
+        {% if user.is_authenticated %}
+        <!-- 사용자가 로그인된 경우 -->
+        <a href="{% url 'loginok' %}"> <!--main_page => loginok  // 홈을 눌렀을 때 메인페이지(로그인한 사용자)로-->
             <button class="btn btn-outline-success" type="button">Home</button>
         </a>
-        <a href="{% url 'common:login'%}">
+        <a href="{% url 'logout' %}">
+        {% comment %} <a href="{% url '' %}" >  <!--logout => main_page // 로그아웃 버튼을 눌렀을 때 비회원 메인페이지로 전환--> {% endcomment %}
+            <button class="btn btn-outline-danger" type="button">Logout</button>
+        </a>
+        <a href="{% url 'mypage:mypage' %}">
+            <button class="btn btn-outline-success" type="button">My Page</button>      <!-- // 마이페이지 버튼을 눌렀을 때 mypage/마이페이지로 전환-->
+        </a>
+
+    {% else %}
+
+    <a href="/community/">
+            <button class="btn btn-outline-success" type="button">Home</button>
+        </a>
+        <a href="{% url 'common:login'%}">      
             <button class="btn btn-outline-success" type="button">Login</button>
         </a>
-        <a href="/community/my_page.html">
-            <button class="btn btn-outline-success" type="button">My Page</button>
-        </a>
+        <a href="http://localhost:8000/community/my_page.html">
+    <button class="btn btn-outline-success" type="button">My Page</button>
+</a>
+    {% endif %}
     </nav>
+
 
     <div class="underline"></div>
     <div class="center">
         <h1>🍽 너의 맛집은❔</h1></div>
-    <div class="center">    
-        {% if user.is_authenticated %}
-            <span id="online-users" class="right">👤 현재 접속 ID: {{user.username}}</span>     <!--로그아웃 상태로 고치기-->
-        {%else%}
-            <span id="online-users" class="right">👤 현재 접속 ID: 비회원</span> 
-        {% endif %}
-    </div>
+        <div class="header">
+            <div class="right-top">    
+            {% if user.is_authenticated %}
+                <span id="online-users">👤 현재 접속 ID: {{user.username}}</span>     <!--로그아웃 상태로 고치기-->
+            {%else%}
+                <span id="online-users">👤 현재 접속 ID: 비회원</span> 
+            {% endif %}
+            </div>
+        </div>
 
     <!-- 가운데 정렬된 검색 컨테이너 -->
     <div class="search-container">
         <h1>먹고 싶은 것을 검색하세요</h1>
         <form action="{% url 'search' %}" method="get">
-            <div class="form-group">
+            <select name="category" id="id_category">
+                <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            {% comment %} <div class="form-group"> {% endcomment %}
                 <input type="text" id="search" name="q" placeholder="검색어 입력" required>
-                    <select name="category" id="id_category">
-                        <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
-                        {% for category in categories %}
-                        <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                        </select>
-                    </div>
-                    <button class="btn btn-outline-success" type="submit">검색</button>
-                </form>
-            </div>
-            
-
-
+                
+            {% comment %} </div> {% endcomment %}
+            <button class="btn btn-outline-success" type="submit">검색</button>
+        </form>
     </div>
 
     <hr/>

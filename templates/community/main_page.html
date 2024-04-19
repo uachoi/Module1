@@ -109,6 +109,11 @@ figcaption {
             width: 100%; /* 이미지를 부모 요소에 맞게 조절 */
             height: auto; /* 이미지를 자동으로 조절 */
         }
+        .right-top {
+            position: absolute;
+            top: 10px; /* 요소를 상단으로 이동 */
+            right: 10px; /* 요소를 오른쪽으로 이동 */
+        }
 
     </style>
 </head>
@@ -130,26 +135,29 @@ figcaption {
     <div class="underline"></div>
     <div class="center">
         <h1>🍽 너의 맛집은❔</h1></div>
-    <div class="center">    
+        <div class="header">
+        <div class="right-top">    
         {% if user.is_authenticated %}
             <span id="online-users" class="right">👤 현재 접속 ID: {{user.username}}</span>     <!--로그아웃 상태로 고치기-->
         {%else%}
             <span id="online-users" class="right">👤 현재 접속 ID: 비회원</span> 
         {% endif %}
-    </div>
+        </div>
+        </div>
 
             <div class="search-container">
                 <h1>먹고 싶은 것을 검색하세요</h1>
                 <form action="{% url 'search' %}" method="get">
-                    <div class="form-group">
+                    <select name="category" id="id_category">
+                        <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% comment %} <div class="form-group"> {% endcomment %}
                         <input type="text" id="search" name="q" placeholder="검색어 입력" required>
-                        <select name="category" id="id_category">
-                            <option value="">모든 카테고리</option> <!-- 기본 선택 항목 -->
-                            {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                        
+                    {% comment %} </div> {% endcomment %}
                     <button class="btn btn-outline-success" type="submit">검색</button>
                 </form>
             </div>
