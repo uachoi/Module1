@@ -64,10 +64,10 @@ def confirm_remove(request, author):
 @login_required
 def mypage(request):
     author = request.user.username
-    if author==admin:   # 관리자가 마이페이지 접속 시
-        all_posts = Posting.objects.filter(is_del=False)
+    if author=='admin':   # 관리자가 마이페이지 접속 시
+        all_posts = Posting.objects.all().filter(is_del=False)
         #author = request.user.username
-        return render(request, 'mypage/mypage.html', {'all_posts': all_posts})
+        return render(request, 'mypage/mypage.html', {'all_posts': all_posts, 'author': author})
     else:
         #author = request.user.username
         # author가 "test"인 데이터를 가져옴 = 현재 사용자 게시글만 불러옴

@@ -73,7 +73,7 @@
 <body>
     <div class="form-container">
         <h1>🍽 너의 맛집은❔</h1>
-        <form method="post" enctype="multipart/form-data" onchange="validateFile()">
+        <form method="post" enctype="multipart/form-data" >     <!-- **수정-->
             {% csrf_token %}
             {{ form.as_p }}
 

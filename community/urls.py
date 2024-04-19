@@ -47,6 +47,7 @@ urlpatterns = [
     
     
     path('search/', search_results, name='search'),
+    path('post/<int:pk>/edit/', views.post_edit, name='post_edit'),
 
 
 

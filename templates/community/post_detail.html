@@ -344,7 +344,11 @@
                 <span class="heart">&#10084;</span> <!-- 하트 아이콘 -->
                 <span id="like-count">{{ likes_count }}</span>     <!--  posting => post  -->
             </div>
-
+            {% if user.is_authenticated and user.username == post.author %}
+                <div class="post-actions">
+                <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-outline-secondary">수정하기</a>
+                </div>
+            {% endif %}
             
             
         </article>

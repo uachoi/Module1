@@ -29,7 +29,7 @@ class Posting(models.Model):    # 게시글 작성 모델
     #likes = models.ManyToManyField(User, related_name='posting_like')
     comments = models.IntegerField(default=0)
     
-    image1 = models.ImageField(upload_to='community/uploads/', blank=True, null=True)
+    image1 = models.ImageField(upload_to='community/uploads/', blank=True, null=True)       ## 수정
     image2 = models.ImageField(upload_to='community/uploads/', blank=True, null=True)
     image3 = models.ImageField(upload_to='community/uploads/', blank=True, null=True)
     
