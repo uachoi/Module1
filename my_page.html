@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>맛집 커뮤니티</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        /* 중앙 정렬을 위한 스타일 */
+        .center {
+            display: flex; /* Flexbox 사용 */
+            justify-content: center; /* 수평 가운데 정렬 */
+            align-items: center; /* 수직 가운데 정렬 */
+            height: 50px; /* 화면의 전체 높이를 차지 */
+            }
+            /* 헤딩에 대한 스타일 */
+            h1 {
+                font-size: 36px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group button,
+        .form-group a.button {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none; /* Remove underline from links */
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group a.button { /* Additional styles to make <a> look like a button */
+            border: 1px solid #007bff;
+            text-align: center;
+        }
+        .form-group a.button:hover {
+            background-color: #0056b3;
+        }
+        .form-group button[type="submit"] {
+            background-color: #28a745;
+        }
+        .form-group button[type="submit"]:hover {
+            background-color: #218838;
+        }        
+
+   /* 이미지 컨테이너 스타일 */
+.image-container {
+    display: flex; /* Flexbox를 사용하여 이미지를 나란히 배치 */
+    justify-content: center; /* 가운데 정렬 */
+    gap: 20px; /* 이미지 사이의 간격 */
+    margin: 20px 0; /* 상하 여백 추가 */
+}
+
+/* 이미지 스타일 */
+.image-container img {
+    width: 800px; /* 모든 이미지의 너비를 크게 설정 */
+    height: 800px; /* 모든 이미지의 높이를 크게 설정 */
+    object-fit: cover; /* 이미지를 정사각형에 꽉 차게 채움 */
+    border-radius: 10px; /* 이미지의 가장자리를 약간 둥글게 처리 */
+    cursor: pointer; /* 마우스 커서를 손가락 모양으로 변경 */
+}
+
+/* 검색창과 제목 가운데 정렬 */
+.search-container {
+    text-align: center; /* 가운데 정렬 */
+    margin: 20px 0; /* 상하 여백 추가 */
+}
+
+/* 설명글 스타일 */
+figcaption {
+    font-weight: bold; /* 글자 두께를 두껍게 설정 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 8px; /* 위쪽 간격 추가 */
+}
+
+  /* UL 요소를 플렉스 컨테이너로 설정하고 가로로 나열 */
+  ul {
+            display: flex; /* 플렉스 레이아웃 사용 */
+            flex-wrap: wrap; /* 요소들이 자동으로 다음 줄로 이동할 수 있게 함 */
+            justify-content: space-between; /* 요소들 간 간격을 자동으로 조절 */
+            width: 95%; /* 가로로 꽉 차게 설정 */
+        }
+
+        /* 각 LI 요소의 스타일 */
+        li {
+            flex: 1 1 calc(33.3333% - 10px); /* 각 요소를 3열로 나눔 */
+            margin: 5px; /* 각 요소 사이에 간격 추가 */
+            box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 조절 */
+        }
+
+        /* 이미지 스타일 */
+        img {
+            width: 100%; /* 이미지를 부모 요소에 맞게 조절 */
+            height: auto; /* 이미지를 자동으로 조절 */
+        }
+
+        .right-top {
+    position: absolute;
+    top: 10px; /* 요소를 상단으로 이동 */
+    right: 10px; /* 요소를 오른쪽으로 이동 */
+}
+    </style>
+</head>
+
+<body>
+   
+    <nav>
+        <a href="./">
+            <button class="btn btn-outline-success" type="button">Home</button>
+        </a>
+        <a href="{% url 'common:login'%}">        <!--community => common  /  "/common/login.html"  / 메인에서 로그인 버튼을 클릭하면 로그인화면으로-->
+            <button class="btn btn-outline-success" type="button">Login</button>
+        </a>
+        <a href="./my_page.html">
+            <button class="btn btn-outline-success" type="button">My Page</button>
+        </a>
+    </nav>
+    
+    <div class="underline"></div>
+    <div class="center">
+        <h1>🍽 너의 맛집은❔</h1></div>
+        
+        <div class="header">
+            <div class="right-top">
+                {% if user.is_authenticated %}
+                    <span id="online-users">👤 현재 접속 ID: {{user.username}}</span>
+                {% else %}
+                    <span id="online-users">👤 현재 접속 ID: 비회원</span>
+                {% endif %}
+            </div>
+        </div>
+
+    <hr/>
+
+    <li style="width: 100%; text-align: center; margin-top: 80px; list-style: none; ">
+      
+        <h4>로그인이 필요합니다!</h4>
+     
+    </li>
+
+    </body>
+ 
+
+</html>
