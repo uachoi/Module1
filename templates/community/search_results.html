@@ -189,9 +189,14 @@ figcaption {
         </form>
     </div>
 
-    <a href="{% url 'create_post' %}">
-        <button class="btn btn-outline-success" type="button">글 작성</button>
-    </a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'create_post' %}">
+            <button class="btn btn-outline-success" type="button">글 작성</button>
+        </a>
+    {%else%}
+    {% endif %}
+    
+    
 
 </div>
     <hr>
@@ -221,10 +226,14 @@ figcaption {
                 {% endfor %}
             {% else %}
                 <!-- 검색 결과가 없을 때만 표시 -->
-                <li style="width: 100%; text-align: center; margin-top: 80px;">
+                {% comment %} <li style="width: 100%; text-align: center; margin-top: 80px;">
                     {% if results_count == 0 %}<!--삭제플래그가 T인 게시물만 있을 경우 -->
                     <h4>새로운 맛집을 공유해주세요!</h4>
                     {%endif%}
+                </li> {% endcomment %}
+
+                <li style="width: 100%; text-align: center; margin-top: 80px;">
+                    <h4>새로운 맛집을 공유해주세요!</h4>
                 </li>
             {% endif %}
             {% endblock %}
