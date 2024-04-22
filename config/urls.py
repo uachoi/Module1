@@ -27,7 +27,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('page1/', include('page1.urls')),
     path('common/', include('common.urls')),
-    path('', views.index, name='index'),
+    # path('', views.index, name='index'),
+    path('', include('community.urls')),
     path('community/', include('community.urls')), 
     path('mypage/', include('mypage.urls')),
 ]

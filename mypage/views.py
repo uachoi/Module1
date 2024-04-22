@@ -30,11 +30,11 @@ def change_password(request, author):
             # 새 비밀번호로 변경
             user.set_password(new_password)
             user.save()
-            return redirect('mypage:mypage')  # 비밀번호 변경 성공:  마이페이지로 리다이렉트
+            return redirect('common:login')  # 비밀번호 변경 성공:  마이페이지로 리다이렉트
         else:
             # 비밀번호가 일치하지 않을 때 에러 메시지 설정
             error_message = '기존 비밀번호가 일치하지 않습니다.'
-    
+        
     return render(request, 'mypage/edit_password.html', {'author': author, 'error_message': error_message})
 ##==============================##
 
