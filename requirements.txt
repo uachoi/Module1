@@ -2,6 +2,7 @@ asgiref==3.8.1
 beautifulsoup4==4.12.3
 Django==5.0.4
 django-bootstrap4==24.1
+django-storages==1.14.2
 mysqlclient==2.2.4
 pillow==10.3.0
 PyMySQL==1.1.0
