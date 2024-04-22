@@ -48,7 +48,7 @@ def confirm_remove(request, author):
     #user = Posting.objects.get(username=username)    # add
     if request.method == 'POST':
         password = request.POST.get('password')
-        user = Posting.objects.get(username=author)
+        user = User.objects.get(username=author)
         if user.check_password(password):
             # 비밀번호 검증 성공 시 회원 탈퇴
             user.delete()

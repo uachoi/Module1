@@ -48,7 +48,10 @@ urlpatterns = [
     
     path('search/', search_results, name='search'),
     
+    
+    ## 추가
     path('post/<int:pk>/edit/', views.post_edit, name='post_edit'),        #원본코드
+    path('delete_comment/<int:pk>/', views.delete_comment, name='delete_comment'),
     #path('post_edit/<int:pk>/edit/', views.post_edit, name='post_edit'),
     #path('post_edit/<int:pk>/', views.post_edit, name='post_edit'),
 

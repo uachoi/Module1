@@ -157,6 +157,24 @@
         button:disabled{/**버튼 속성이 disabled되면 색을 바꾼다.**/
             background: #cbcaca;
         }
+        .comment {
+            position: relative;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            }
+            .delete-comment-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 5px 8px;
+            color: #fff;
+            background-color: #08000063;
+            border: none;
+            cursor: pointer;
+            }
+            .delete-comment-btn:hover {
+            background-color: #080000;
+            }
     </style>
 </head>
 <body>
@@ -337,9 +355,15 @@
             <h3>댓글</h3>
             <!-- 댓글 목록 -->
             {% for comment in comments %}
+            {% if not comment.is_del %}
                 <div class="comment">
                     <strong>{{ comment.author.username }}</strong>: {{ comment.text }}
+                    {% if user.is_authenticated and user.username == post.author or user.username == comment.author.username or user.username == comment.post.author.username %}
+                    <!-- 삭제 버튼 -->
+                    <a href="{% url 'delete_comment' comment.pk %}" class="delete-comment-btn" onclick="return confirm('이 댓글을 삭제하시겠습니까?');">댓글 삭제</a>
+                    {% endif %}
                 </div>
+            {%endif%}
             {% empty %}
                 <p>댓글이 없습니다.</p>
             {% endfor %}

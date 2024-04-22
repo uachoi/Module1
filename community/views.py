@@ -15,6 +15,7 @@ from django.http import JsonResponse
 
 from django.urls import reverse
 from django.db.models import Q
+from django.contrib import messages
 
 
 def index(request):
@@ -37,7 +38,6 @@ def login_page(request):
 
 def my_page(request):   # 비회원으로 마이페이지접속할 때 
     #if request.method=='POST'
-    
     return render(request,'community/my_page.html')
 
 
@@ -198,33 +198,54 @@ def post_delete(request, pk):   # 게시글 삭제
     return redirect('loginok')        # 게시글을 삭제하면 메인화면으로
 
 
-# def post_edit(request, pk):
-#     post = get_object_or_404(Posting, pk=pk)
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, instance=post)
-#         if form.is_valid():
-#             form.save()
-#             return redirect(reverse('post_detail', args=[pk]))
-#     else:
-#         form = PostForm(instance=post)
-#     return render(request, 'community/post_edit.html', {'form': form})
 
+## 게시물 수정 **
 
+@login_required
 def post_edit(request, pk):
     post = get_object_or_404(Posting, pk=pk)
-    
-    # GET 요청에서 폼을 초기화할 때 이전에 제출된 데이터를 사용하여 폼을 초기화합니다.
-    form = PostForm(instance=post)  # 이전에 제출된 데이터를 사용하여 폼을 초기화합니다.
 
     if request.method == 'POST':
-        # POST 요청일 때는 폼에서 제출된 데이터를 처리합니다.
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            form.save()
-            return redirect('post_detail', pk=pk)
+            updated_post = form.save(commit=False)
+            updated_post.author = request.user.username  # 필요한 경우, 작성자 정보를 갱신합니다.
+            updated_post.save()
+            # 성공 메시지를 추가하는 것을 고려할 수 있습니다.
+            # messages.success(request, '게시글이 성공적으로 수정되었습니다.')
+            return redirect('post_detail', pk=updated_post.pk)  # 게시글 상세 페이지로 리디렉션
+    else:
+        form = PostForm(instance=post)
 
-    return render(request, 'community/post_edit.html', {'form': form})
+    return render(request, 'community/post_edit.html', {'form': form, 'post': post})
 
+# def post_edit(request, pk):
+#     post = get_object_or_404(Posting, pk=pk)
+    
+#     # GET 요청에서 폼을 초기화할 때 이전에 제출된 데이터를 사용하여 폼을 초기화합니다.
+#     form = PostForm(instance=post)  # 이전에 제출된 데이터를 사용하여 폼을 초기화합니다.
 
-######^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^########
+#     if request.method == 'POST':
+#         # POST 요청일 때는 폼에서 제출된 데이터를 처리합니다.
+#         form = PostForm(request.POST, request.FILES, instance=post)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('post_detail', pk=pk)
 
+#     return render(request, 'community/post_edit.html', {'form': form})
+
+## 댓글 삭제 + 삭제 플래그 추가**
+@login_required
+def delete_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post = get_object_or_404(Posting, pk=comment.post.pk)  # 댓글이 속한 게시글
+
+    # 댓글 작성자 또는 게시글 작성자인 경우 삭제 가능
+    if request.user == comment.author or request.user.username == post.author:
+        comment.is_del = True  # 삭제 플래그 업데이트
+        comment.save()  # 저장
+        messages.success(request, '댓글이 삭제되었습니다.')
+        return redirect(request.META.get('HTTP_REFERER', 'home'))
+    else:
+        messages.error(request, '댓글을 삭제할 권한이 없습니다.')
+        return redirect(request.META.get('HTTP_REFERER', 'home'))

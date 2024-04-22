@@ -51,7 +51,8 @@ class Comment(models.Model):
     #author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_comments')
     text = models.TextField()
-    created_date = models.DateTimeField(auto_now_add=True)    
+    created_date = models.DateTimeField(auto_now_add=True)
+    is_del=models.BooleanField(default=False)    
     
     # def save(self, *args, **kwargs):
     #     # author 필드에는 사용자 객체(User)의 username이 아닌 사용자 객체(User)를 직접 할당해야 합니다.

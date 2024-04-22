@@ -4,11 +4,66 @@
     <meta charset="UTF-8">
     <title>글 수정하기</title>
     <!-- 스타일과 스크립트는 필요에 따라 추가하세요 -->
+    <style>
+        body{
+            background-color:#FFFFF0;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button,
+        .form-group a.button {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none; /* Remove underline from links */
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .form-group a.button { /* Additional styles to make <a> look like a button */
+            border: 1px solid #007bff;
+            text-align: center;
+        }
+        .form-group a.button:hover {
+            background-color: #0056b3;
+        }
+        .form-group button[type="submit"] {
+            background-color: #28a745;
+        }
+        .form-group button[type="submit"]:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
     <div class="form-container">
         <h1>✨글 수정하기✨</h1>
-        <form method="post" enctype="multipart/form-data" action="{% url 'post_edit' pk=posting.id %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'post_edit' pk=post.pk %}">
             {% csrf_token %}
             {{ form.as_p }}
 
